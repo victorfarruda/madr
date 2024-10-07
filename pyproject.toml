@@ -5,7 +5,11 @@ description = "Meu Acervo De Romances"
 readme = "README.md"
 requires-python = "==3.12.*"
 dependencies = [
+    "alembic>=1.13.3",
     "fastapi[standard]>=0.115.0",
+    "pydantic-settings>=2.5.2",
+    "pydantic>=2.9.2",
+    "sqlalchemy>=2.0.35",
 ]
 
 [tool.uv]
