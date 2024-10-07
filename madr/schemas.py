@@ -21,3 +21,19 @@ class BookList(BaseModel):
 class BookUpdate(BaseModel):
     year: int | None = None
     title: str | None = None
+
+
+class NovelistSchema(BaseModel):
+    name: str
+
+
+class NovelistPublic(NovelistSchema):
+    id: int
+
+
+class NovelistList(BaseModel):
+    novelists: list[NovelistPublic]
+
+
+class NovelistUpdate(BaseModel):
+    name: str | None = None
