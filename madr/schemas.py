@@ -8,6 +8,7 @@ class Message(BaseModel):
 class BookSchema(BaseModel):
     year: int
     title: str
+    novelist_id: int
 
 
 class BookPublic(BookSchema):
@@ -21,6 +22,7 @@ class BookList(BaseModel):
 class BookUpdate(BaseModel):
     year: int | None = None
     title: str | None = None
+    novelist_id: int | None = None
 
 
 class NovelistSchema(BaseModel):
