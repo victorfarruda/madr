@@ -14,7 +14,7 @@ router = APIRouter(prefix='/novelists', tags=['novelists'])
 T_Session = Annotated[Session, Depends(get_session)]
 
 
-@router.post('/', status_code=HTTPStatus.OK, response_model=NovelistPublic)
+@router.post('/', status_code=HTTPStatus.CREATED, response_model=NovelistPublic)
 def create_novelist(novelist: NovelistSchema, session: T_Session):
     db_novelist: Novelist = Novelist(
         name=novelist.name,

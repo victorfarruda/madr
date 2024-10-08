@@ -14,7 +14,7 @@ router = APIRouter(prefix='/books', tags=['books'])
 T_Session = Annotated[Session, Depends(get_session)]
 
 
-@router.post('/', status_code=HTTPStatus.OK, response_model=BookPublic)
+@router.post('/', status_code=HTTPStatus.CREATED, response_model=BookPublic)
 def create_book(book: BookSchema, session: T_Session):
     db_novelist = session.scalar(select(Novelist).where(Novelist.id == book.novelist_id))
 

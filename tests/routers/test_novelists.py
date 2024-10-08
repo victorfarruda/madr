@@ -4,6 +4,7 @@ from http import HTTPStatus
 def test_create_novelist(client):
     response = client.post('/novelists', json={'name': 'Clarice Lispector'})
 
+    assert HTTPStatus.CREATED == response.status_code
     assert {'name': 'Clarice Lispector', 'id': 1} == response.json()
 
 
@@ -13,12 +14,14 @@ def test_get_all_novelists(client, novelists_10):
 
     json_response = response.json()
 
+    assert HTTPStatus.OK == response.status_code
     assert objects_quantity == len(json_response.get('novelists'))
 
 
 def test_patch_novelist(client, novelist):
     response = client.patch(f'/novelists/{novelist.id}', json={'name': 'Algum nome de romancista'})
 
+    assert HTTPStatus.OK == response.status_code
     assert {'name': 'Algum nome de romancista', 'id': novelist.id} == response.json()
 
 
@@ -32,25 +35,26 @@ def test_patch_novelist_should_return_not_found(client, novelist):
 def test_get_novelist(client, novelist):
     response = client.get(f'/novelists/{novelist.id}')
 
-    assert {
-        'id': novelist.id,
-        'name': novelist.name,
-    } == response.json()
+    assert HTTPStatus.OK == response.status_code
+    assert {'id': novelist.id, 'name': novelist.name} == response.json()
 
 
 def test_get_novelist_should_return_not_found(client):
     response = client.get('/novelists/987')
 
+    assert HTTPStatus.NOT_FOUND == response.status_code
     assert {'detail': 'Novelist not found.'} == response.json()
 
 
 def test_delete_novelist(client, novelist):
     response = client.delete(f'/novelists/{novelist.id}')
 
+    assert HTTPStatus.OK == response.status_code
     assert {'message': 'Novelist has been deleted successfully.'} == response.json()
 
 
 def test_delete_novelist_should_return_not_found(client):
     response = client.delete('/novelists/753')
 
+    assert HTTPStatus.NOT_FOUND == response.status_code
     assert {'detail': 'Novelist not found.'} == response.json()

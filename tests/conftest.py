@@ -7,7 +7,7 @@ from testcontainers.postgres import PostgresContainer
 from madr.app import app
 from madr.database import get_session
 from madr.models import table_registry
-from tests.factories import NovelistFactory
+from tests.factories import BookFactory, NovelistFactory
 
 
 @pytest.fixture(scope='session')
@@ -60,4 +60,25 @@ def novelists_10(session):
     session.bulk_save_objects(novelists)
     session.commit()
 
-    return novelist
+    return novelists
+
+
+@pytest.fixture
+def book(session, novelist):
+    db_book = BookFactory(novelist_id=novelist.id)
+
+    session.add(db_book)
+    session.commit()
+    session.refresh(db_book)
+
+    return db_book
+
+
+@pytest.fixture
+def books_10(session, novelist):
+    books = BookFactory.build_batch(10)
+
+    session.bulk_save_objects(books)
+    session.commit()
+
+    return books
