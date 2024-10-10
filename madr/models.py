@@ -24,3 +24,15 @@ class Book:
     novelist_id: Mapped[int] = mapped_column(ForeignKey('novelists.id'))
 
     novelist: Mapped['Novelist'] = relationship(init=False, back_populates='books')
+
+
+@table_registry.mapped_as_dataclass
+class User:
+    __tablename__ = 'users'
+
+    id: Mapped[int] = mapped_column(init=False, primary_key=True, autoincrement=True)
+    username: Mapped[str] = mapped_column(unique=True)
+    email: Mapped[str] = mapped_column(unique=True)
+    full_name: Mapped[str]
+    hashed_password: Mapped[str]
+    disabled: Mapped[bool]

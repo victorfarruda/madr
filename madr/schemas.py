@@ -39,3 +39,28 @@ class NovelistList(BaseModel):
 
 class NovelistUpdate(BaseModel):
     name: str | None = None
+
+
+class TokenSchema(BaseModel):
+    access_token: str
+    token_type: str
+
+
+class TokenData(BaseModel):
+    username: str | None = None
+
+
+class UserSchema(BaseModel):
+    username: str
+    email: str
+    full_name: str
+    disabled: bool
+    password: str
+
+
+class UserPublic(BaseModel):
+    id: int
+    username: str
+    email: str
+    full_name: str
+    disabled: bool

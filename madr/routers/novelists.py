@@ -3,19 +3,18 @@ from typing import Annotated
 
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy import select
-from sqlalchemy.orm import Session
 
-from madr.database import get_session
 from madr.models import Novelist
-from madr.schemas import Message, NovelistList, NovelistPublic, NovelistSchema, NovelistUpdate
+from madr.schemas import Message, NovelistList, NovelistPublic, NovelistSchema, NovelistUpdate, UserPublic
+from madr.security import get_current_active_user
+from madr.t_types import T_Session
 
 router = APIRouter(prefix='/novelists', tags=['novelists'])
-
-T_Session = Annotated[Session, Depends(get_session)]
+T_CurrentActiveUser = Annotated[UserPublic, Depends(get_current_active_user)]
 
 
 @router.post('/', status_code=HTTPStatus.CREATED, response_model=NovelistPublic)
-def create_novelist(novelist: NovelistSchema, session: T_Session):
+def create_novelist(novelist: NovelistSchema, session: T_Session, current_user: T_CurrentActiveUser):
     db_novelist: Novelist = Novelist(
         name=novelist.name,
     )
@@ -27,13 +26,13 @@ def create_novelist(novelist: NovelistSchema, session: T_Session):
 
 
 @router.get('/', status_code=HTTPStatus.OK, response_model=NovelistList)
-def get_all_novelists(session: T_Session):
+def get_all_novelists(session: T_Session, current_user: T_CurrentActiveUser):
     novelists = session.scalars(select(Novelist)).all()
     return {'novelists': novelists}
 
 
 @router.patch('/{novelist_id}', response_model=NovelistPublic)
-def patch_novelist(novelist_id: int, session: T_Session, novelist: NovelistUpdate):
+def patch_novelist(novelist_id: int, session: T_Session, novelist: NovelistUpdate, current_user: T_CurrentActiveUser):
     db_novelist = session.scalar(select(Novelist).where(Novelist.id == novelist_id))
 
     if not db_novelist:
@@ -50,7 +49,7 @@ def patch_novelist(novelist_id: int, session: T_Session, novelist: NovelistUpdat
 
 
 @router.get('/{novelist_id}', response_model=NovelistPublic)
-def get_novelist(novelist_id: int, session: T_Session):
+def get_novelist(novelist_id: int, session: T_Session, current_user: T_CurrentActiveUser):
     db_novelist = session.scalar(select(Novelist).where(Novelist.id == novelist_id))
 
     if not db_novelist:
@@ -60,7 +59,7 @@ def get_novelist(novelist_id: int, session: T_Session):
 
 
 @router.delete('/{novelist_id}', response_model=Message)
-def delete_novelist(novelist_id: int, session: T_Session):
+def delete_novelist(novelist_id: int, session: T_Session, current_user: T_CurrentActiveUser):
     db_novelist = session.scalar(select(Novelist).where(Novelist.id == novelist_id))
 
     if not db_novelist:
