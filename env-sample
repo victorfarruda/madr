@@ -1,0 +1,4 @@
+DATABASE_URL=sqlite:///database.db
+SECRET_KEY=minha-secret-key
+ALGORITHM=HS256
+ACCESS_TOKEN_EXPIRE_MINUTES=30
